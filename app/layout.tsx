@@ -17,6 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <div id="title">
+          <h1>SWAPI People Gallery</h1>
+        </div>
         {children}
       </body>
     </html>
