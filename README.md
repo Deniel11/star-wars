@@ -39,3 +39,24 @@ To navigate the main page, the initial display showcases the first 10 characters
 
 These features collectively provide a user-friendly experience for exploring and discovering Star Wars characters through the SWAPI People Gallery.
 
+## 🖼️ Pictures: 🖼️
+---
+![image](https://github.com/Deniel11/star-wars/assets/126866683/27c074f8-b227-41fa-9b17-ab8990be7268)
+---
+![image](https://github.com/Deniel11/star-wars/assets/126866683/a99a1289-7f31-4767-b602-ec4380baa2ca)
+---
+![image](https://github.com/Deniel11/star-wars/assets/126866683/1a5fac67-bcd2-4e91-94b6-0559496d074f)
+---
+![image](https://github.com/Deniel11/star-wars/assets/126866683/ec8aee89-dd9a-4dbc-b0f3-9f857fb10063)
+---
+![image](https://github.com/Deniel11/star-wars/assets/126866683/00402e63-1d65-4ea0-900d-dad7453a39c8)
+---
+![image](https://github.com/Deniel11/star-wars/assets/126866683/5d913ef6-f3be-4801-b0ee-d1c7d93d494b)
+---
+
+
+
+
+
+
+
