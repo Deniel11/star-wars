@@ -47,48 +47,62 @@ interface CharacterDetailsProps {
 }
 
 const CharacterDetails: React.FC<CharacterDetailsProps> = ({ person, onClose }) => {
+  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
   if (!person) {
     return null;
   }
 
   return (
-    <div className="modal">
+    <div className="modal" onClick={handleOutsideClick}>
       <div className="modal-content">
         <span className="close" onClick={onClose}>
           &times;
         </span>
-        <img src={"people/"+ person.url.split('/')[5] + ".jpg"}></img>
+        <img src={`people/${person.url.split('/')[5]}.jpg`} alt={person.name}></img>
         <h2>{person.name}</h2>
-        <p><span className='name'>Year Of Birh:</span> <span className='data'>{person.birth_year}</span></p>
-        <p><span className='name'>Eye color:</span> <span className='data'>{person.eye_color}</span></p>
-        <p><span className='name'>Gender:</span> <span className='data'>{person.gender}</span></p>
-        <p><span className='name'>Hair Color:</span> <span className='data'>{person.hair_color}</span></p>
-        <p><span className='name'>Height:</span> <span className='data'>{person.height}</span></p>
-        <p><span className='name'>Mass:</span> <span className='data'>{person.mass}</span></p>
-        <p><span className='name'>Skin color:</span> <span className='data'>{person.skin_color}</span></p>
-        <p><span className='name'>Homeworld:</span> <span className='data'>{person.homeworld.name}</span></p>
-        <p className='name'>Films:</p>
-        <ul className='data'>
-          {person.films.map(f => <li key={f.title}>{f.title}</li>)}
-        </ul>
-        <p className='name'>Spieces:</p>
-        <ul className='data'>
-          {person.species.map(s => <li key={s.name}>{s.name}</li>)}
-        </ul>
-        <p className='name'>Starships:</p>
-        <ul className='data'>
-          {person.starships.map(s => <li key={s.name}>{s.name}</li>)}
-        </ul>
-        <p className='name'>Vehicles:</p>
-        <ul className='data'>
-          {person.vehicles.map(v => <li key={v.name}>{v.name}</li>)}
-        </ul>
-        <p><span className='name'>URL:</span> <span className='data'>{person.url}</span></p>
-        <p><span className='name'>Created:</span> <span className='data'>{person.created}</span></p>
-        <p><span className='name'>Edited:</span> <span className='data'>{person.edited}</span></p>
+        {renderDetail("Year Of Birth", person.birth_year)}
+        {renderDetail("Eye color", person.eye_color)}
+        {renderDetail("Gender", person.gender)}
+        {renderDetail("Hair Color", person.hair_color)}
+        {renderDetail("Height", person.height)}
+        {renderDetail("Mass", person.mass)}
+        {renderDetail("Skin color", person.skin_color)}
+        {renderDetail("Homeworld", person.homeworld.name)}
+        {renderList("Films", person.films, (f) => f.title)}
+        {renderList("Species", person.species, (s) => s.name)}
+        {renderList("Starships", person.starships, (s) => s.name)}
+        {renderList("Vehicles", person.vehicles, (v) => v.name)}
+        {renderDetail("URL", person.url)}
+        {renderDetail("Created", person.created)}
+        {renderDetail("Edited", person.edited)}
       </div>
     </div>
   );
+
+  function renderDetail(label: string, value: string) {
+    return (
+      <p>
+        <span className="name">{label}:</span> <span className="data">{value}</span>
+      </p>
+    );
+  }
+
+  function renderList(label: string, list: any[], getItem: (item: any) => string) {
+    return (
+      <div>
+        <p className="name">{label}:</p>
+        <ul className="data">
+          {list.map((item, index) => (
+            <li key={index}>{getItem(item)}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
 };
 
 const Loader: React.FC = () => (
@@ -223,42 +237,16 @@ const Home = () => {
           onChange={handleSearchTermChange}
         />
         <div className='filters'>
-  <label>
-    Gender:
-    <select
-      value={genderFilter || ''}
-      onChange={(e) => setGenderFilter(e.target.value || null)}
-    >
-      <option value="">All</option>
-      {Array.from(new Set(people.map(p => p.gender))).map((gender, index) => (
-        <option key={index} value={gender}>
-          {gender}
-        </option>
-      ))}
-    </select>
-  </label>
-  <label>
-    Homeworld:
-    <select
-      value={homeworldFilter || ''}
-      onChange={(e) => setHomeworldFilter(e.target.value || null)}
-    >
-      <option value="">All</option>
-      {Array.from(new Set(people.map(p => p.homeworld.name))).map((homeworld, index) => (
-        <option key={index} value={homeworld}>
-          {homeworld}
-        </option>
-      ))}
-    </select>
-  </label>
-</div>
+          {renderFilterSelect("Gender", people.map(p => p.gender), genderFilter, setGenderFilter)}
+          {renderFilterSelect("Homeworld", people.map(p => p.homeworld.name), homeworldFilter, setHomeworldFilter)}
+        </div>
       </div>
       {isLoading ? (<Loader />) : (
-        <div id="galery">
+        <div id="gallery">
             {filteredPeople.map(p =>
             <div className='personCard' key={p.url.split('/')[5]}>
                 <a onClick={() => handlePersonClick(p)}>
-                    <img src={"people/"+ p.url.split('/')[5] + ".jpg"}></img>
+                    <img src={`people/${p.url.split('/')[5]}.jpg`} alt={p.name}></img>
                     <p>{p.name}</p>
                 </a>
             </div>)}
@@ -278,7 +266,26 @@ const Home = () => {
 
     <CharacterDetails person={selectedPerson} onClose={handleCloseModal} />
     </>
-  )
-}
+  );
 
-export default Home
+  function renderFilterSelect(label: string, options: string[], selectedValue: string | null, onChange: (value: string | null) => void) {
+    return (
+      <label>
+        {label}:
+        <select
+          value={selectedValue || ''}
+          onChange={(e) => onChange(e.target.value || null)}
+        >
+          <option value="">All</option>
+          {Array.from(new Set(options)).map((option, index) => (
+            <option key={index} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </label>
+    );
+  }
+};
+
+export default Home;

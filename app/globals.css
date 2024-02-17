@@ -5,7 +5,7 @@
   text-align: center; /* Középre igazítás */
 }
 
-#galery {
+#gallery {
   margin: auto;
   margin-top: 10px;
   width: 90%;
@@ -15,22 +15,22 @@
   gap: 10px; /* Rés a grid elemek között */
 }
 
-#galery div {
+#gallery div {
   padding: 10px;
   background-color: rgb(55, 45, 45);
   color: whitesmoke;
   transition: opacity 0.3s ease; /* Smooth áttűnés */
 }
 
-#galery img{
+#gallery img{
   width: 100%;
 }
 
-#galery div:hover {
+#gallery div:hover {
   opacity: 0.7; /* Csökkentett átláthatóság hover állapotban */
 }
 
-#galery p {
+#gallery p {
   text-align: center;
   pointer-events: none;
   font-size: 22px;
@@ -57,7 +57,7 @@ ul.react-paginate li.break a {
   border-color: transparent;
 }
 ul.react-paginate li.selected a {
-  background-color: #0366d6;
+  background-color: rgb(36, 36, 36);
   border-color: transparent;
   color: white;
   min-width: 32px;

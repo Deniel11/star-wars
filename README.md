@@ -2,10 +2,10 @@
 
 ## 📄 Description 📄
 This web gallery was created for an interview project and is built using Next.js 14. The project incorporates the following features:
-✔️ Displays a comprehensive list of people from the swapi.dev API website.
-✔️ Utilizes pagination with the swapi.dev/people endpoint by allowing dynamic page fetching using ?page=1.
-✔️ Implements a search functionality for names using the swapi.dev API.
-✔️ Includes additional filtering options for gender and homeworld in the search feature.
+- ✔️ Displays a comprehensive list of people from the swapi.dev API website.
+- ✔️ Utilizes pagination with the swapi.dev/people endpoint by allowing dynamic page fetching using ?page=1.
+- ✔️ Implements a search functionality for names using the swapi.dev API.
+- ✔️ Includes additional filtering options for gender and homeworld in the search feature.
 
 ## 🚀 API 🚀
 The application relies on the SWAPI (Star Wars API) available at swapi.dev.
