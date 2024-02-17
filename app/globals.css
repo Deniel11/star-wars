@@ -1,31 +1,36 @@
-#title{
+#title {
   color: white;
   padding: 2em;
   background-color: black;
+  text-align: center; /* Középre igazítás */
 }
 
-#galery{
+#galery {
   margin: auto;
   margin-top: 10px;
-  width:90%;
+  width: 90%;
   padding: 10px;
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Rugalmas grid layout */
+  gap: 10px; /* Rés a grid elemek között */
 }
 
-#galery div{
-  width: 400px;
+#galery div {
   padding: 10px;
-  margin: 5px;
   background-color: rgb(55, 45, 45);
   color: whitesmoke;
+  transition: opacity 0.3s ease; /* Smooth áttűnés */
 }
 
-#galery div :hover{
-  opacity: 70%;
+#galery img{
+  width: 100%;
 }
 
-#galery p{
+#galery div:hover {
+  opacity: 0.7; /* Csökkentett átláthatóság hover állapotban */
+}
+
+#galery p {
   text-align: center;
   pointer-events: none;
   font-size: 22px;

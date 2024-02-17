@@ -104,6 +104,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [isSearching, setIsSearching] = useState<boolean>(false);
   const [genderFilter, setGenderFilter] = useState<string | null>(null);
   const [homeworldFilter, setHomeworldFilter] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState<number>(0);
@@ -170,26 +171,32 @@ const Home = () => {
 
         setPeople(peopleWithDetails);
         setFilteredPeople(filteredPeople);
-        setTotalPages(data.count > 0 ? Math.ceil(data.count / 10) : 0); 
+        setTotalPages(data.count > 0 ? Math.ceil(data.count / 10) : 0);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
         setIsLoading(false);
+        setIsSearching(false);
       }
     };
 
     fetchPeople();
   }, [page, searchTerm, genderFilter, homeworldFilter]);
 
-  const handlePageChange = (newPage : any) => {
+  const handlePageChange = (newPage : any) => {    
     setPage(newPage.selected + 1);
     setGenderFilter(null);
     setHomeworldFilter(null);
+    if (!searchTerm) {
+      setSearchTerm('');
+    }
   };
 
   const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchTerm = e.target.value;
     if (newSearchTerm !== searchTerm) {
+      setIsSearching(true);
+      setPage(1);
       setSearchTerm(newSearchTerm);
       setGenderFilter(null);
       setHomeworldFilter(null);
@@ -257,6 +264,7 @@ const Home = () => {
             </div>)}
         </div>
       )}
+      {isSearching ? ("") : (
         <ReactPaginate
           className='react-paginate'
           breakLabel="..."
@@ -265,6 +273,7 @@ const Home = () => {
           pageCount={totalPages}
           previousLabel="Previous"
         />
+      )}
     </div>
 
     <CharacterDetails person={selectedPerson} onClose={handleCloseModal} />
