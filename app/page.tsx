@@ -99,6 +99,7 @@ const Loader: React.FC = () => (
 
 const Home = () => {
   const [people, setPeople] = useState<Person[]>([]);
+  const [filteredPeople, setFilteredPeople] = useState<Person[]>([]);
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
@@ -118,36 +119,36 @@ const Home = () => {
         const peopleWithDetails = await Promise.all(
           data.results.map(async (person: any) => {
             const homeworldResponse = await fetch(person.homeworld);
-            const homeworldData : Planet = await homeworldResponse.json();
-            
-            const filmsData : Film[] = await Promise.all(
+            const homeworldData: Planet = await homeworldResponse.json();
+
+            const filmsData: Film[] = await Promise.all(
               person.films.map(async (film: string) => {
                 const filmResponse = await fetch(film);
                 return await filmResponse.json();
               })
             );
 
-            const speciesData : Specie[] = await Promise.all(
+            const speciesData: Specie[] = await Promise.all(
               person.species.map(async (specie: string) => {
                 const specieResponse = await fetch(specie);
                 return await specieResponse.json();
               })
             );
 
-            const starshipsData : Starship[] = await Promise.all(
+            const starshipsData: Starship[] = await Promise.all(
               person.starships.map(async (starship: string) => {
                 const starshipResponse = await fetch(starship);
                 return await starshipResponse.json();
               })
             );
 
-            const vehiclesData : Vehicle[] = await Promise.all(
+            const vehiclesData: Vehicle[] = await Promise.all(
               person.vehicles.map(async (vehicle: string) => {
                 const vehicleResponse = await fetch(vehicle);
                 return await vehicleResponse.json();
               })
             );
-            
+
             return {
               ...person,
               homeworld: homeworldData,
@@ -159,7 +160,16 @@ const Home = () => {
           })
         );
 
+        const filteredPeople = peopleWithDetails.filter((person: Person | null) => {
+          if (!person) return false;
+          return (
+            (!genderFilter || person.gender.toLowerCase() === genderFilter.toLowerCase()) &&
+            (!homeworldFilter || person.homeworld.name.toLowerCase() === homeworldFilter.toLowerCase())
+          );
+        });
+
         setPeople(peopleWithDetails);
+        setFilteredPeople(filteredPeople);
         setTotalPages(data.count > 0 ? Math.ceil(data.count / 10) : 0); 
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -169,10 +179,21 @@ const Home = () => {
     };
 
     fetchPeople();
-  }, [page, searchTerm]);
+  }, [page, searchTerm, genderFilter, homeworldFilter]);
 
   const handlePageChange = (newPage : any) => {
     setPage(newPage.selected + 1);
+    setGenderFilter(null);
+    setHomeworldFilter(null);
+  };
+
+  const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchTerm = e.target.value;
+    if (newSearchTerm !== searchTerm) {
+      setSearchTerm(newSearchTerm);
+      setGenderFilter(null);
+      setHomeworldFilter(null);
+    }
   };
 
   const handlePersonClick = (person: Person) => {
@@ -192,12 +213,42 @@ const Home = () => {
           type="text"
           placeholder="Search by name..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchTermChange}
         />
+        <div className='filters'>
+  <label>
+    Gender:
+    <select
+      value={genderFilter || ''}
+      onChange={(e) => setGenderFilter(e.target.value || null)}
+    >
+      <option value="">All</option>
+      {Array.from(new Set(people.map(p => p.gender))).map((gender, index) => (
+        <option key={index} value={gender}>
+          {gender}
+        </option>
+      ))}
+    </select>
+  </label>
+  <label>
+    Homeworld:
+    <select
+      value={homeworldFilter || ''}
+      onChange={(e) => setHomeworldFilter(e.target.value || null)}
+    >
+      <option value="">All</option>
+      {Array.from(new Set(people.map(p => p.homeworld.name))).map((homeworld, index) => (
+        <option key={index} value={homeworld}>
+          {homeworld}
+        </option>
+      ))}
+    </select>
+  </label>
+</div>
       </div>
       {isLoading ? (<Loader />) : (
         <div id="galery">
-            {people.map(p =>
+            {filteredPeople.map(p =>
             <div className='personCard' key={p.url.split('/')[5]}>
                 <a onClick={() => handlePersonClick(p)}>
                     <img src={"people/"+ p.url.split('/')[5] + ".jpg"}></img>
