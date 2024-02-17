@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🌌 SWAPI People Gallery ☄️
 
-## Getting Started
+## 📄 Description 📄
+This web gallery was created for an interview project and is built using Next.js 14. The project incorporates the following features:
+✔️ Displays a comprehensive list of people from the swapi.dev API website.
+✔️ Utilizes pagination with the swapi.dev/people endpoint by allowing dynamic page fetching using ?page=1.
+✔️ Implements a search functionality for names using the swapi.dev API.
+✔️ Includes additional filtering options for gender and homeworld in the search feature.
 
-First, run the development server:
+## 🚀 API 🚀
+The application relies on the SWAPI (Star Wars API) available at swapi.dev.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🛰️ Tools 🛰️
+The project is developed using React, Next.js, Tailwind CSS, and TypeScript.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🔧 Dependencies 🔧
+The following dependencies are used in the project:
+- "classnames": "^2.5.1",
+- "next": "14.1.0",
+- "paginate": "^0.2.0",
+- "pagination": "^0.4.6",
+- "react": "^18",
+- "react-dom": "^18",
+- "react-paginate": "^8.2.0",
+- "react-router-dom": "^6.22.0"
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📔 Guide 📔
+- Clone this repository to your local machine.
+- Run the 'npm run dev' command to start the web server.
+- Access the local version of the project at 'localhost:3000'.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+To navigate the main page, the initial display showcases the first 10 characters. From here, users can explore the following options within the page:
 
-## Learn More
+🔍**Search:** Conduct searches based on character names. The search utilizes the 'swapi.dev' API, and the page number adjusts dynamically based on search results.
 
-To learn more about Next.js, take a look at the following resources:
+🏽**Filtering:** Apply filters to narrow down results based on gender and homeworld. It's important to note that filtering is limited to the current page to optimize API calls.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+🔢**Pagination:** Navigate between pages to view additional characters. Each page switch triggers a new API call.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+These features collectively provide a user-friendly experience for exploring and discovering Star Wars characters through the SWAPI People Gallery.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
