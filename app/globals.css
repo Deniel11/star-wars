@@ -156,3 +156,12 @@ ul.react-paginate li.disabled a {
 .modal-content a:hover {
   color: #0056b3;
 }
+
+.modal-content .name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.modal-content .data {
+  margin-bottom: 15px;
+}

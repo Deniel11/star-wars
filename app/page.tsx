@@ -11,14 +11,34 @@ interface Person {
   height : string;
   mass : string;
   skin_color : string;
-  homeworld : string;
-  films : Array<string>;
-  species : Array<string>;
-  starships : Array<string>;
-  vehicles : Array<string>;
+  homeworld : Planet;
+  films : Film[];
+  species : Specie[];
+  starships : Starship[];
+  vehicles : Vehicle[];
   url : string;
   created : string;
   edited : string;
+}
+
+interface Planet {
+  name: string;
+}
+
+interface Film {
+  title: string;
+}
+
+interface Specie {
+  name : string;
+}
+
+interface Vehicle {
+  name : string;
+}
+
+interface Starship {
+  name : string;
 }
 
 interface CharacterDetailsProps {
@@ -39,25 +59,33 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({ person, onClose }) 
         </span>
         <img src={"people/"+ person.url.split('/')[5] + ".jpg"}></img>
         <h2>{person.name}</h2>
-        <p>Year Of Birh: {person.birth_year}</p>
-        <p>Eye color: {person.eye_color}</p>
-        <p>Gender: {person.gender}</p>
-        <p>Hair Color: {person.hair_color}</p>
-        <p>Height: {person.height}</p>
-        <p>Mass: {person.mass}</p>
-        <p>Skin color: {person.skin_color}</p>
-        <p>Homeworld: {person.homeworld}</p>
-        <p>Films:</p>
-        {person.films.map(f => <li>{f}</li>)}
-        <p>Spieces:</p>
-        {person.species.map(s => <li>{s}</li>)}
-        <p>Starships:</p>
-        {person.starships.map(s => <li>{s}</li>)}
-        <p>Vehicles:</p>
-        {person.vehicles.map(v => <li>{v}</li>)}
-        <p>URL: {person.url}</p>
-        <p>Created: {person.created}</p>
-        <p>Edited: {person.edited}</p>
+        <p><span className='name'>Year Of Birh:</span> <span className='data'>{person.birth_year}</span></p>
+        <p><span className='name'>Eye color:</span> <span className='data'>{person.eye_color}</span></p>
+        <p><span className='name'>Gender:</span> <span className='data'>{person.gender}</span></p>
+        <p><span className='name'>Hair Color:</span> <span className='data'>{person.hair_color}</span></p>
+        <p><span className='name'>Height:</span> <span className='data'>{person.height}</span></p>
+        <p><span className='name'>Mass:</span> <span className='data'>{person.mass}</span></p>
+        <p><span className='name'>Skin color:</span> <span className='data'>{person.skin_color}</span></p>
+        <p><span className='name'>Homeworld:</span> <span className='data'>{person.homeworld.name}</span></p>
+        <p className='name'>Films:</p>
+        <ul className='data'>
+          {person.films.map(f => <li key={f.title}>{f.title}</li>)}
+        </ul>
+        <p className='name'>Spieces:</p>
+        <ul className='data'>
+          {person.species.map(s => <li key={s.name}>{s.name}</li>)}
+        </ul>
+        <p className='name'>Starships:</p>
+        <ul className='data'>
+          {person.starships.map(s => <li key={s.name}>{s.name}</li>)}
+        </ul>
+        <p className='name'>Vehicles:</p>
+        <ul className='data'>
+          {person.vehicles.map(v => <li key={v.name}>{v.name}</li>)}
+        </ul>
+        <p><span className='name'>URL:</span> <span className='data'>{person.url}</span></p>
+        <p><span className='name'>Created:</span> <span className='data'>{person.created}</span></p>
+        <p><span className='name'>Edited:</span> <span className='data'>{person.edited}</span></p>
       </div>
     </div>
   );
@@ -81,11 +109,59 @@ const Home = () => {
       try {
         const response = await fetch(`https://swapi.dev/api/people/?page=${page}`);
         const data = await response.json();
-        setPeople(data.results);
+
+        // Fetch additional details for each person
+        const peopleWithDetails = await Promise.all(
+          data.results.map(async (person: any) => {
+            const homeworldResponse = await fetch(person.homeworld);
+            const homeworldData : Planet = await homeworldResponse.json();
+
+            const filmsData : Film[] = await Promise.all(
+              person.films.map(async (film: string) => {
+                const filmResponse = await fetch(film);
+                return await filmResponse.json();
+              })
+            );
+
+            const speciesData : Specie[] = await Promise.all(
+              person.species.map(async (specie: string) => {
+                const specieResponse = await fetch(specie);
+                return await specieResponse.json();
+              })
+            );
+
+            const starshipsData : Starship[] = await Promise.all(
+              person.starships.map(async (starship: string) => {
+                const starshipResponse = await fetch(starship);
+                return await starshipResponse.json();
+              })
+            );
+
+            const vehiclesData : Vehicle[] = await Promise.all(
+              person.vehicles.map(async (vehicle: string) => {
+                const vehicleResponse = await fetch(vehicle);
+                return await vehicleResponse.json();
+              })
+            );
+            
+            return {
+              ...person,
+              homeworld: homeworldData,
+              films: filmsData,
+              species: speciesData,
+              starships: starshipsData,
+              vehicles: vehiclesData,
+            };
+          })
+        );
+
+        setPeople(peopleWithDetails);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
         setIsLoading(false);
+        console.log(people);
+        
       }
     };
 
