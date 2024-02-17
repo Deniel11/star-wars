@@ -102,20 +102,24 @@ const Home = () => {
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [genderFilter, setGenderFilter] = useState<string | null>(null);
+  const [homeworldFilter, setHomeworldFilter] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   useEffect(() => {
     const fetchPeople = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`https://swapi.dev/api/people/?page=${page}`);
+        const searchQuery = searchTerm ? `&search=${searchTerm}` : '';
+        const response = await fetch(`https://swapi.dev/api/people/?page=${page}${searchQuery}`);
         const data = await response.json();
 
-        // Fetch additional details for each person
         const peopleWithDetails = await Promise.all(
           data.results.map(async (person: any) => {
             const homeworldResponse = await fetch(person.homeworld);
             const homeworldData : Planet = await homeworldResponse.json();
-
+            
             const filmsData : Film[] = await Promise.all(
               person.films.map(async (film: string) => {
                 const filmResponse = await fetch(film);
@@ -156,17 +160,16 @@ const Home = () => {
         );
 
         setPeople(peopleWithDetails);
+        setTotalPages(data.count > 0 ? Math.ceil(data.count / 10) : 0); 
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
         setIsLoading(false);
-        console.log(people);
-        
       }
     };
 
     fetchPeople();
-  }, [page]);
+  }, [page, searchTerm]);
 
   const handlePageChange = (newPage : any) => {
     setPage(newPage.selected + 1);
@@ -183,7 +186,16 @@ const Home = () => {
   return (
     <>
     <div>
-      {isLoading && <Loader />}
+      <div className='search-container'>
+        <input
+          className='search-input'
+          type="text"
+          placeholder="Search by name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+      {isLoading ? (<Loader />) : (
         <div id="galery">
             {people.map(p =>
             <div className='personCard' key={p.url.split('/')[5]}>
@@ -193,14 +205,13 @@ const Home = () => {
                 </a>
             </div>)}
         </div>
-
-        {/* Pagination */}
+      )}
         <ReactPaginate
           className='react-paginate'
           breakLabel="..."
           nextLabel="Next"
           onPageChange={handlePageChange}
-          pageCount={9}
+          pageCount={totalPages}
           previousLabel="Previous"
         />
     </div>

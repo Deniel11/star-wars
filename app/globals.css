@@ -165,3 +165,18 @@ ul.react-paginate li.disabled a {
 .modal-content .data {
   margin-bottom: 15px;
 }
+
+.search-container {
+  text-align: center;
+}
+
+.search-input {
+  width: 300px;
+  padding: 8px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  display: inline-block;
+}
