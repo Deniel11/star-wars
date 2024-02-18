@@ -45,6 +45,8 @@ These features collectively provide a user-friendly experience for exploring and
 ---
 ![image](https://github.com/Deniel11/star-wars/assets/126866683/a99a1289-7f31-4767-b602-ec4380baa2ca)
 ---
+![image](https://github.com/Deniel11/star-wars/assets/126866683/560bf6a3-7c98-406e-83ea-5ea02872e9a3)
+---
 ![image](https://github.com/Deniel11/star-wars/assets/126866683/1a5fac67-bcd2-4e91-94b6-0559496d074f)
 ---
 ![image](https://github.com/Deniel11/star-wars/assets/126866683/ec8aee89-dd9a-4dbc-b0f3-9f857fb10063)
