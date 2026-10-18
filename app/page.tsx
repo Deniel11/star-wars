@@ -3,6 +3,34 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import ReactPaginate from 'react-paginate';
 
+interface SwapiPerson {
+  name: string;
+  birth_year: string;
+  eye_color: string;
+  gender: string;
+  hair_color: string;
+  height: string;
+  mass: string;
+  skin_color: string;
+  homeworld: string;
+  films: string[];
+  species: string[];
+  starships: string[];
+  vehicles: string[];
+  url: string;
+  created: string;
+  edited: string;
+}
+
+interface SwapiPeopleResponse {
+  count: number;
+  results: SwapiPerson[];
+}
+
+interface ReactPaginatePageChange {
+  selected: number;
+}
+
 interface Person {
   name : string;
   birth_year : string;
@@ -99,7 +127,7 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({ person, onClose }) 
     );
   }
 
-  function renderList(label: string, list: any[], getItem: (item: any) => string) {
+  function renderList<T>(label: string, list: T[], getItem: (item: T) => string) {
     return (
       <div>
         <p className="name">{label}:</p>
@@ -137,10 +165,10 @@ const Home = () => {
       try {
         const searchQuery = searchTerm ? `&search=${searchTerm}` : '';
         const response = await fetch(`https://swapi.dev/api/people/?page=${page}${searchQuery}`);
-        const data = await response.json();
+        const data: SwapiPeopleResponse = await response.json();
 
         const peopleWithDetails = await Promise.all(
-          data.results.map(async (person: any) => {
+          data.results.map(async (person: SwapiPerson) => {
             const homeworldResponse = await fetch(person.homeworld);
             const homeworldData: Planet = await homeworldResponse.json();
 
@@ -205,7 +233,7 @@ const Home = () => {
     fetchPeople();
   }, [page, searchTerm, genderFilter, homeworldFilter]);
 
-  const handlePageChange = (newPage : any) => {    
+  const handlePageChange = (newPage: ReactPaginatePageChange) => {
     setPage(newPage.selected + 1);
     setGenderFilter(null);
     setHomeworldFilter(null);
