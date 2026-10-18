@@ -1,5 +1,6 @@
 'use client';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import ReactPaginate from 'react-paginate';
 
 interface Person {
@@ -62,7 +63,14 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({ person, onClose }) 
         <span className="close" onClick={onClose}>
           &times;
         </span>
-        <img src={`people/${person.url.split('/')[5]}.jpg`} alt={person.name}></img>
+        <Image
+          src={`/people/${person.url.split('/')[5]}.jpg`}
+          alt={person.name}
+          width={600}
+          height={600}
+          sizes="(max-width: 400px) 100vw, 400px"
+          style={{ display: 'block', margin: '0 auto', maxWidth: '100%', height: 'auto' }}
+        />
         <h2>{person.name}</h2>
         {renderDetail("Year Of Birth", person.birth_year)}
         {renderDetail("Eye color", person.eye_color)}
@@ -246,7 +254,14 @@ const Home = () => {
             {filteredPeople.map(p =>
             <div className='personCard' key={p.url.split('/')[5]}>
                 <a onClick={() => handlePersonClick(p)}>
-                    <img src={`people/${p.url.split('/')[5]}.jpg`} alt={p.name}></img>
+                    <Image
+                      src={`/people/${p.url.split('/')[5]}.jpg`}
+                      alt={p.name}
+                      width={600}
+                      height={600}
+                      sizes="(max-width: 700px) 90vw, (max-width: 1200px) 45vw, 30vw"
+                      style={{ width: '100%', height: 'auto' }}
+                    />
                     <p>{p.name}</p>
                 </a>
             </div>)}
